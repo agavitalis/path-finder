@@ -22,7 +22,7 @@ async function bootstrap() {
     basicAuth({
       challenge: true,
       users: {
-        pathe: 'finder',
+        path: 'finder',
       },
     }),
   );

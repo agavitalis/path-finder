@@ -5,32 +5,32 @@ export type RestaurantDocument = HydratedDocument<Restaurant>;
 
 @Schema({ timestamps: true })
 export class Restaurant {
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   address: string;
 
-  @Prop({ required: true })
+  @Prop({ type: Object, required: true })
   location: {
     type: { type: string; default: 'Point' };
     coordinates: { type: Array<number> };
   };
 
-  @Prop({ default: null })
+  @Prop({ type: [String], default: null })
   cuisines: string[];
 
-  @Prop({ default: 5 })
+  @Prop({ type: Number, default: 5 })
   rating: number;
 
-  @Prop({ default: 500 })
+  @Prop({ type: Number, default: 500 })
   averageMealPrice: number;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   isDeleted: boolean;
 
-  @Prop({ default: null })
+  @Prop({ type: Date, default: null })
   deletedAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(Restaurant);
+export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);
