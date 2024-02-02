@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,19 +16,60 @@ export class RestaurantsService {
     return await this.restaurantModel.create(createRestaurantDto);
   }
 
-  findAll() {
-    return `This action returns all restaurants`;
+  async findAll() {
+    return await this.restaurantModel.find({ isDeleted: false });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} restaurant`;
+  async findOne(restaurantId: string) {
+    const restaurant = await this.restaurantModel.findOne({
+      _id: restaurantId,
+      isDeleted: false,
+    });
+
+    if (!restaurant) {
+      throw new HttpException('FAQ not found', HttpStatus.NOT_FOUND);
+    }
+
+    return restaurant;
   }
 
-  update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
-    return `This action updates a #${id} restaurant`;
+  async update(restaurantId: string, updateRestaurantDto: UpdateRestaurantDto) {
+    const updatedRestaurant = await this.restaurantModel.findOneAndUpdate(
+      {
+        _id: restaurantId,
+        isDeleted: false,
+      },
+      {
+        ...updateRestaurantDto,
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!updatedRestaurant) {
+      throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
+    }
+
+    return updatedRestaurant;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} restaurant`;
+  async remove(restaurantId: string) {
+    const restaurant = await this.restaurantModel.findOneAndUpdate(
+      {
+        _id: restaurantId,
+        isDeleted: false,
+      },
+      {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    );
+
+    if (!restaurant) {
+      throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
+    }
+
+    return restaurant;
   }
 }

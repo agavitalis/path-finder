@@ -1,10 +1,12 @@
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type RestaurantDocument = HydratedDocument<Restaurant>;
 
 @Schema({ timestamps: true })
 export class Restaurant {
+  _id: Types.ObjectId;
+
   @Prop({ type: String, required: true })
   name: string;
 
@@ -14,7 +16,7 @@ export class Restaurant {
   @Prop({ type: Object, required: true })
   location: {
     type: { type: string; default: 'Point' };
-    coordinates: { type: Array<number> };
+    coordinates: { type: [number] };
   };
 
   @Prop({ type: [String], default: null })
