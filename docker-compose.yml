@@ -1,0 +1,36 @@
+version: "3"
+services:
+  path-finder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "6060:6060"
+    env_file:
+      - ./.env
+    networks:
+      - backend
+    volumes:
+      - .:/app/path-finder
+      - /app/path-finder/node_modules
+    depends_on:
+      - "mongodb"
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+    
+volumes:
+  mongo_data:
+    driver: local
+ 
