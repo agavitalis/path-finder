@@ -74,20 +74,23 @@ export class RestaurantsService {
     return restaurants;
   }
 
-  async findOne(restaurantId: string) {
+  async findOne(restaurantId: string): Promise<Restaurant> {
     const restaurant = await this.restaurantModel.findOne({
       _id: restaurantId,
       isDeleted: false,
     });
 
     if (!restaurant) {
-      throw new HttpException('FAQ not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
     }
 
     return restaurant;
   }
 
-  async update(restaurantId: string, updateRestaurantDto: UpdateRestaurantDto) {
+  async update(
+    restaurantId: string,
+    updateRestaurantDto: UpdateRestaurantDto,
+  ): Promise<Restaurant> {
     const updatedRestaurant = await this.restaurantModel.findOneAndUpdate(
       {
         _id: restaurantId,
@@ -108,7 +111,9 @@ export class RestaurantsService {
     return updatedRestaurant;
   }
 
-  async remove(restaurantId: string) {
+  async remove(
+    restaurantId: string,
+  ): Promise<{ response: 'restaurant deleted' }> {
     const restaurant = await this.restaurantModel.findOneAndUpdate(
       {
         _id: restaurantId,
@@ -124,6 +129,6 @@ export class RestaurantsService {
       throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
     }
 
-    return restaurant;
+    return { response: 'restaurant deleted' };
   }
 }

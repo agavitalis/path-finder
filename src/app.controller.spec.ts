@@ -16,7 +16,9 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getHello()).toBe(
+        '<h3 style="text-align:center"> Hello World From Path-Finder Restaurants API:<code> /docs </code> to view API documentation <h3>',
+      );
     });
   });
 });

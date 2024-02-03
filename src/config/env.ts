@@ -7,7 +7,7 @@ process.env.ENV_PATH
 
 const Schema = Joi.object({
   PORT: Joi.number().required(),
-  NODE_ENV: Joi.string().valid('dev', 'staging', 'production').required(),
+  NODE_ENV: Joi.string().valid('dev', 'test', 'production').required(),
   DB_URL: Joi.string().required(),
 })
   .unknown()

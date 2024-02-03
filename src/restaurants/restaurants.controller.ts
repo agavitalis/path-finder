@@ -13,6 +13,7 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
+  DeleteRestaurantResponseDto,
   FetchRestaurantsParamDto,
   FetchSingleRestaurantParamDto,
   RestaurantResponseDto,
@@ -73,7 +74,7 @@ export class RestaurantsController {
 
   @Delete(':restaurantId')
   @ApiOkResponse({
-    type: RestaurantResponseDto,
+    type: DeleteRestaurantResponseDto,
   })
   remove(@Param() paramData: FetchSingleRestaurantParamDto) {
     return this.restaurantsService.remove(paramData.restaurantId);

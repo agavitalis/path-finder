@@ -53,6 +53,14 @@ export class RestaurantsResponseDto {
   restaurants: RestaurantResponseDto[];
 }
 
+export class DeleteRestaurantResponseDto {
+  @ApiProperty({
+    description: 'delete restaurant success message',
+    example: 'restaurant deleted',
+  })
+  response: string;
+}
+
 export class FetchSingleRestaurantParamDto {
   @ApiProperty({
     type: 'string',

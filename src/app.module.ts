@@ -9,7 +9,6 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
-    RestaurantsModule,
     MongooseModule.forRoot(Env.DB_URL),
     ThrottlerModule.forRoot([
       {
@@ -17,6 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
         limit: 100,
       },
     ]),
+    RestaurantsModule,
   ],
   controllers: [AppController],
   providers: [
