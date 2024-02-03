@@ -13,9 +13,9 @@ export class Restaurant {
   @Prop({ type: String, required: true })
   address: string;
 
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Object, required: true, index: '2dsphere' })
   location: {
-    type: { type: string; default: 'Point' };
+    type: { type: string; enum: ['Point']; default: 'Point' };
     coordinates: { type: [number] };
   };
 

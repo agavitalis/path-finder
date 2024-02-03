@@ -21,7 +21,7 @@ export class LocationDto {
   type: string;
 
   @ApiProperty({
-    description: 'The location Latitude and Logitude Points',
+    description: 'The location Logitude and Latitude Points',
     example: [40.7112, -74.0055],
     required: true,
   })

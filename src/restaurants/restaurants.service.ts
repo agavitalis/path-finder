@@ -1,9 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant, RestaurantDocument } from './entities/restaurant.entity';
 import { Model } from 'mongoose';
+import {
+  CreateRestaurantDto,
+  FetchRestaurantsParamDto,
+  UpdateRestaurantDto,
+} from './dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -16,8 +19,59 @@ export class RestaurantsService {
     return await this.restaurantModel.create(createRestaurantDto);
   }
 
-  async findAll() {
-    return await this.restaurantModel.find({ isDeleted: false });
+  async findAll(
+    restaurantFilters: FetchRestaurantsParamDto,
+  ): Promise<Array<Restaurant>> {
+    const filter = {};
+    filter['$or'] = [
+      { city: { $regex: restaurantFilters.city, $options: 'i' } },
+    ];
+
+    if (restaurantFilters.cuisines) {
+      const cousineSearch = {
+        cuisines: {
+          $in: [restaurantFilters.cuisines],
+        },
+      };
+      filter['$or'].push(cousineSearch);
+    }
+
+    if (restaurantFilters.rating) {
+      filter['$or'].push({
+        rating: Number(restaurantFilters.rating),
+      });
+    }
+
+    if (restaurantFilters.averageMealPrice) {
+      filter['$or'].push({
+        averageMealPrice: Number(restaurantFilters.averageMealPrice),
+      });
+    }
+
+    const restaurants = await this.restaurantModel.find({
+      $and: [
+        {
+          location: {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [
+                  Number(restaurantFilters.logitude),
+                  Number(restaurantFilters.latitude),
+                ],
+              },
+              $minDistance: 0,
+              $maxDistance: Number(restaurantFilters.distance),
+            },
+          },
+        },
+        {
+          isDeleted: false,
+          ...filter,
+        },
+      ],
+    });
+    return restaurants;
   }
 
   async findOne(restaurantId: string) {
